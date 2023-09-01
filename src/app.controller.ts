@@ -1,7 +1,7 @@
-import { Controller, Delete, Get, Param, Post, Put, Body, HttpCode } from "@nestjs/common/decorators";
+import { Controller, Delete, Get, Param, Post, Put, Body } from "@nestjs/common/decorators";
+import { ParseUUIDPipe } from "@nestjs/common/pipes";
 import { AppService } from "./app.service";
-import { v4 as uuid } from "uuid";
-import { data, ReportType } from "./data";
+import {  ReportType } from "./data";
 
 
 @Controller('/report/:type')
@@ -25,20 +25,20 @@ export class AppController{
   @Get(':id')
   getReportById(
     @Param('type') type:string,
-    @Param('id') id: string
+    @Param('id', ParseUUIDPipe) id: string
   ){
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
     return this.appService.getReportById(reportType, id)
   }
 
   @Put(":id")
-  updateReport(@Param('type') type: string, @Param('id') id: string, @Body() body){
+  updateReport(@Param('type') type: string, @Param('id', ParseUUIDPipe) id: string, @Body() body){
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
     return this.appService.updateReport(reportType, id, body) 
   }
 
   @Delete(':id')
-  deleteReport(@Param('id') id:string ){
+  deleteReport(@Param('id', ParseUUIDPipe) id:string ){
     return this.appService.deleteReport(id)
   }
 }
