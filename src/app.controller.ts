@@ -1,4 +1,5 @@
-import { Controller, Delete, Get, Param, Post, Put } from "@nestjs/common/decorators";
+import { Controller, Delete, Get, Param, Post, Put, Body } from "@nestjs/common/decorators";
+import { v4 as uuid } from "uuid";
 import { data, ReportType } from "./data";
 
 
@@ -17,8 +18,21 @@ export class AppController{
   }
 
   @Post()
-  createReport(){
-    return "Created"
+  createReport(@Body() body: {
+    source: string,
+    amount: number,
+  }, @Param() type: string){
+    
+    const newReport = {
+      id: uuid(),
+      source: body.source,
+      amount: body.amount,
+      created_at: new Date(),
+      updated_at: new Date(),
+      type: type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
+    }
+    data.report.push(newReport)
+    return newReport
   }
 
   @Get(':id')
@@ -26,7 +40,6 @@ export class AppController{
     @Param('type') type:string,
     @Param('id') id: string
   ){
-    console.log({id, type})
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
     const report = data.report.find(report => report.type === reportType && report.id=== id)
 
