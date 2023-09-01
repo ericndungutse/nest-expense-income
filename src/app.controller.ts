@@ -22,10 +22,17 @@ export class AppController{
   }
 
   @Get(':id')
-  getReportById(){
-    return {
-      status: "Report"
-    }
+  getReportById(
+    @Param('type') type:string,
+    @Param('id') id: string
+  ){
+    console.log({id, type})
+    const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
+    const report = data.report.find(report => report.type === reportType && report.id=== id)
+
+    if(!report) return {status: 404, message: "report not found"}
+
+    return report
   }
 
   @Put(":id")
