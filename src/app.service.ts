@@ -6,6 +6,10 @@ interface Report  {
   source: string,
   amount: number,
 }
+interface UpdateReport  {
+  source?: string,
+  amount?: number,
+}
 @Injectable()
 export class AppService{
   getAllReports(type: ReportType){
@@ -21,6 +25,7 @@ export class AppService{
   }
 
   createReport(type: ReportType, {amount, source}:Report){
+
     const newReport = {
       id: uuid(),
       source: source,
@@ -35,7 +40,7 @@ export class AppService{
 
   }
 
-  updateReport(type: ReportType, id: string, body:Report){
+  updateReport(type: ReportType, id: string, body: UpdateReport){
     const report = data.report.find(report => report.type === type && report.id === id)
   
     if(!report) return {status: 404, message: "report not found"}
