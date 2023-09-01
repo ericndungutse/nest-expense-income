@@ -67,7 +67,13 @@ export class AppController{
   }
 
   @Delete(':id')
-  deleteReport(){
-    return "Deleted"
+  deleteReport(@Param('type') type: string, @Param('id') id:string ){
+    const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
+    const report = data.report.find(report => report.type === reportType && report.id=== id)
+    console.log(report)
+    if(!report) return {status: 404, message: "report not found"}
+
+    data.report.splice(data.report.findIndex(rep => rep.id === report.id), 1)
+    return data.report
   }
 }
