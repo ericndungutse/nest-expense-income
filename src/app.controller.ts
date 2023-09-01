@@ -17,6 +17,8 @@ export class AppController{
 
   @Post()
   createReport(@Body() body: CreateReportDTO, @Param('type') type: ReportType){
+    console.log(body);
+    
     return this.appService.createReport(type, body)
   }
 
