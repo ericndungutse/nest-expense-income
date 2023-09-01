@@ -49,8 +49,21 @@ export class AppController{
   }
 
   @Put(":id")
-  updateReport(){
-    return "Updated"
+  updateReport(@Param('type') type: string, @Param('id') id: string, @Body() body){
+    const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
+    const report = data.report.find(report => report.type === reportType && report.id === id)
+  
+    if(!report) return {status: 404, message: "report not found"}
+
+    const newReport = {
+      ...report,
+      updated_at: new Date(),
+      ...body
+    }
+
+    data.report.splice(data.report.findIndex(rep => rep.id === report.id), 1, newReport)
+
+    return newReport
   }
 
   @Delete(':id')
