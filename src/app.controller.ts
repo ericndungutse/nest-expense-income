@@ -1,38 +1,25 @@
-import { Controller, Delete, Get, Param, Post, Put, Body } from "@nestjs/common/decorators";
+import { Controller, Delete, Get, Param, Post, Put, Body, HttpCode } from "@nestjs/common/decorators";
+import { AppService } from "./app.service";
 import { v4 as uuid } from "uuid";
 import { data, ReportType } from "./data";
 
 
 @Controller('/report/:type')
 export class AppController{
+  constructor(private readonly appService: AppService){}
+
   @Get('')
   getAllReports(@Param('type') type){
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
-    const report = data.report.filter(report=> report.type === reportType)
-    return {
-      data: {
-        count: report.length,
-        report: report
-      }
-    }
+    return this.appService.getAllReports(reportType)
   }
 
   @Post()
   createReport(@Body() body: {
     source: string,
     amount: number,
-  }, @Param() type: string){
-    
-    const newReport = {
-      id: uuid(),
-      source: body.source,
-      amount: body.amount,
-      created_at: new Date(),
-      updated_at: new Date(),
-      type: type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
-    }
-    data.report.push(newReport)
-    return newReport
+  }, @Param() type: ReportType){
+    return this.appService.createReport(type, body)
   }
 
   @Get(':id')
@@ -41,39 +28,17 @@ export class AppController{
     @Param('id') id: string
   ){
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
-    const report = data.report.find(report => report.type === reportType && report.id=== id)
-
-    if(!report) return {status: 404, message: "report not found"}
-
-    return report
+    return this.appService.getReportById(reportType, id)
   }
 
   @Put(":id")
   updateReport(@Param('type') type: string, @Param('id') id: string, @Body() body){
     const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
-    const report = data.report.find(report => report.type === reportType && report.id === id)
-  
-    if(!report) return {status: 404, message: "report not found"}
-
-    const newReport = {
-      ...report,
-      updated_at: new Date(),
-      ...body
-    }
-
-    data.report.splice(data.report.findIndex(rep => rep.id === report.id), 1, newReport)
-
-    return newReport
+    return this.appService.updateReport(reportType, id, body) 
   }
 
   @Delete(':id')
-  deleteReport(@Param('type') type: string, @Param('id') id:string ){
-    const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE
-    const report = data.report.find(report => report.type === reportType && report.id=== id)
-    console.log(report)
-    if(!report) return {status: 404, message: "report not found"}
-
-    data.report.splice(data.report.findIndex(rep => rep.id === report.id), 1)
-    return data.report
+  deleteReport(@Param('id') id:string ){
+    return this.appService.deleteReport(id)
   }
 }
