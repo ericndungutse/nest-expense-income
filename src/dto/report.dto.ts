@@ -1,5 +1,5 @@
 // In NestJS, Data Transfer Objects (DTOs) are used to define the shape of data for various operations, such as creating or updating entities. However, it's common to have similar properties between DTOs for creating and updating entities, which can lead to redundancy in your code.
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { IsNumber, IsString, IsPositive, IsNotEmpty, IsOptional } from "class-validator";
 import { ReportType } from "src/data";
 
@@ -35,7 +35,13 @@ export class ReportResponseDTO{
     created_at: Date;
     @Exclude()
     updated_at: Date;
+    
     type: ReportType;
+
+    @Expose({name: "createdAt"})
+    transformCreatedAt(){
+        return this.created_at
+    }
 
     constructor(partial: Partial<ReportResponseDTO>){
         Object.assign(this, partial)
