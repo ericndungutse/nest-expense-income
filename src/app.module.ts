@@ -9,9 +9,12 @@ import { ReportModule } from './report/report.module';
 @Module({
   imports: [SummaryModule, ReportModule],
   controllers: [AppController],
-  providers: [AppService,{
-    provide: APP_INTERCEPTOR,
-    useClass: ClassSerializerInterceptor
-  }],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}

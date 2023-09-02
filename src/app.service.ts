@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common/decorators";
+import { Injectable } from '@nestjs/common/decorators';
 
 @Injectable()
-export class AppService{}
+export class AppService {}

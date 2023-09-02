@@ -1,3 +1,3 @@
-import { Controller } from "@nestjs/common/decorators";
+import { Controller } from '@nestjs/common/decorators';
 @Controller('')
-export class AppController{}
+export class AppController {}

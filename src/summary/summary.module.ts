@@ -4,8 +4,8 @@ import { SummaryService } from './summary.service';
 import { ReportModule } from 'src/report/report.module';
 
 @Module({
-  imports:[ReportModule],
+  imports: [ReportModule],
   controllers: [SummaryController],
-  providers: [SummaryService]
+  providers: [SummaryService],
 })
 export class SummaryModule {}
